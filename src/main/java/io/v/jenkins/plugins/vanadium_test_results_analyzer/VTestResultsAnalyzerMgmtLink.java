@@ -86,6 +86,7 @@ public class VTestResultsAnalyzerMgmtLink extends ManagementLink {
           + " url VARCHAR(1024), "
           // When this entry is added to the database.
           + " update_time DATETIME, "
+          + " causedBy VARCHAR(1024), "
           + " PRIMARY KEY ( id ))";
 
   static final String TB_TEST_RESULTS = "test_results";

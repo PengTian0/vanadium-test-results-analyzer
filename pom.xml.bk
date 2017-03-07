@@ -20,6 +20,8 @@
     </license>
   </licenses>
 
+  <!-- get every artifact through repo.jenkins-ci.org, which proxies all the artifacts that we need -->
+
   <repositories>
         <repository>
             <id>repo.jenkins-ci.org</id>
@@ -34,9 +36,14 @@
     </pluginRepositories>
 
  <properties>
-		<jenkins.version>2.32</jenkins.version>
-		<java.level>8</java.level>
+		<!-- Baseline Jenkins version you use to build the plugin. Users must have this version or newer to
+    run. -->
+		<jenkins.version>1.651.2</jenkins.version>
+		<!-- Java Level to use. Java 7 required when using core >= 1.612 -->
+		<java.level>7</java.level>
+
 		<maven-compiler-plugin.version>3.0</maven-compiler-plugin.version>
+
 	</properties>
 
   <build>
@@ -45,29 +52,6 @@
 	<artifactId>maven-compiler-plugin</artifactId>
 	<version>${maven-compiler-plugin.version}</version>
 	</plugin>
-
-        <plugin>
-    <groupId>org.apache.maven.plugins</groupId>
-    <artifactId>maven-enforcer-plugin</artifactId>
-    <executions>
-        <execution>
-            <id>enforce-banned-dependencies</id>
-            <goals>
-                <goal>enforce</goal>
-            </goals>
-            <configuration>
-                <rules>
-                    <bannedDependencies>
-                        <includes>
-                            <include>mysql-connector-java</include>
-                        </includes>
-                    </bannedDependencies>
-                </rules>
-
-            </configuration>
-        </execution>
-    </executions>
-</plugin>
      </plugins>
   </build>
 

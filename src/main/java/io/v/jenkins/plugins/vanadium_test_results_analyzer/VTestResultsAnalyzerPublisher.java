@@ -31,6 +31,9 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 import org.kohsuke.stapler.DataBoundConstructor;
+import hudson.model.Cause;
+import hudson.triggers.TimerTrigger;
+
 
 public class VTestResultsAnalyzerPublisher extends Notifier implements MatrixAggregatable {
   private static final int TEST_RESULT_SENDER_THREAD_POOL_SIZE = 32;
@@ -90,23 +93,34 @@ public class VTestResultsAnalyzerPublisher extends Notifier implements MatrixAgg
     return true;
   }
 
-  @Override
-  public MatrixAggregator createAggregator(
-      MatrixBuild build, Launcher launcher, BuildListener listener) {
-    return new MatrixAggregator(build, launcher, listener) {
-      /** Will be called the matrix root build ends. */
-      @Override
-      public boolean endBuild() throws InterruptedException, IOException {
-        return VTestResultsAnalyzerPublisher.this.perform(build, launcher, listener);
-      }
-    };
-  }
 
   @Override
   public Descriptor getDescriptor() {
     return (Descriptor) super.getDescriptor();
   }
 
+  private String getBuildCause(AbstractBuild<?, ?> build){
+      String causedBy = "";
+      LOGGER.info("11111111111111");
+      for (Cause cause : build.getCauses()) {
+
+            LOGGER.info(cause.getClass().toString());
+            if (cause instanceof Cause.UserIdCause) {
+                LOGGER.info("2222222222");
+                causedBy = ((Cause.UserIdCause) cause).getShortDescription();
+                LOGGER.info(causedBy);
+            }
+            else if(cause instanceof Cause.UpstreamCause) {
+                LOGGER.info("3333333333");
+                
+                causedBy = ((Cause.UpstreamCause) cause).getShortDescription();
+                LOGGER.info(causedBy);
+            }
+            LOGGER.info(cause.toString());
+      }
+      LOGGER.info("44444 " + causedBy);
+      return causedBy;
+  }
   private void doSendJenkinsResults(
       AbstractBuild<?, ?> build, String ip, String password, BuildListener listener)
       throws InterruptedException, IOException {
@@ -114,13 +128,19 @@ public class VTestResultsAnalyzerPublisher extends Notifier implements MatrixAgg
     try {
       conn = Util.getConnection(ip, password, VTestResultsAnalyzerMgmtLink.DB_NAME);
       Util.logToConsole(listener.getLogger(), "Sending jenkins build stats. Please wait.\n");
+
+
+      Util.logToConsole(listener.getLogger(), "start to get cause.\n");
+      LOGGER.info("cause.....");
+      String causedBy = getBuildCause(build);
+
       String sqlInsert =
           String.format(
               "INSERT INTO "
                   + VTestResultsAnalyzerMgmtLink.TB_JENKINS_BUILDS
                   + "(jenkins_project, build_number, sub_build_labels, node, "
-                  + "start_time, duration, result, url, update_time) VALUES "
-                  + "(?,?,?,?,?,?,?,?,?)");
+                  + "start_time, duration, result, url, update_time, causedBy) VALUES "
+                  + "(?,?,?,?,?,?,?,?,?,?)");
       PreparedStatement stmt = conn.prepareStatement(sqlInsert);
       stmt.setString(1, build.getRootBuild().getProject().getName()); // jenkins_project
       stmt.setInt(2, build.getNumber()); // build_number
@@ -136,6 +156,7 @@ public class VTestResultsAnalyzerPublisher extends Notifier implements MatrixAgg
       stmt.setString(7, build.getResult().toString());
       stmt.setString(8, build.getUrl());
       stmt.setTimestamp(9, new Timestamp(curMs));
+      stmt.setString(10, causedBy);
       stmt.executeUpdate();
       Util.logToConsole(listener.getLogger(), "Build stats sent.\n");
     } catch (SQLException e) {
@@ -158,9 +179,9 @@ public class VTestResultsAnalyzerPublisher extends Notifier implements MatrixAgg
       AbstractBuild<?, ?> build, String ip, String password, final BuildListener listener)
       throws InterruptedException, IOException {
     // Only send test results in free style build and sub matrix build.
-    if (!(build instanceof FreeStyleBuild) && !(build instanceof MatrixRun)) {
-      return;
-    }
+    //if (!(build instanceof FreeStyleBuild) && !(build instanceof MatrixRun)) {
+    //  return;
+    //}
 
     Util.logToConsole(listener.getLogger(), "Sending test results. Please wait.\n");
 

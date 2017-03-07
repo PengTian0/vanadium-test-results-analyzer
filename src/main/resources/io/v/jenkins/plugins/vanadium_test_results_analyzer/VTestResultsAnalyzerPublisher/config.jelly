@@ -1,8 +1,8 @@
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
-  <f:entry title="Send jenkins build results" field="sendJenkinsBuildResults" help="/plugin/vanadium-test-results-analyzer/help-sendJenkinsBuilds.html">
-    <f:checkbox default="true"/>
-  </f:entry>
-  <f:entry title="Send test results" field="sendTestResults" help="/plugin/vanadium-test-results-analyzer/help-sendTestResults.html">
-    <f:checkbox default="false"/>
-  </f:entry>
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:f="/lib/form">
+    <!-- this is where we'd put the GUI for configuration options
+         for the GatlingArchiverStep, if we had any.  This will
+         show up in the Groovy snippet generator. -->
 </j:jelly>
