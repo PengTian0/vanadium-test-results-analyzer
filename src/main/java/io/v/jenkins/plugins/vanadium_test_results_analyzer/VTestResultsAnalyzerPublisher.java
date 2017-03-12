@@ -34,7 +34,6 @@ import org.kohsuke.stapler.DataBoundConstructor;
 import hudson.model.Cause;
 import hudson.triggers.TimerTrigger;
 
-
 public class VTestResultsAnalyzerPublisher extends Notifier implements MatrixAggregatable {
   private static final int TEST_RESULT_SENDER_THREAD_POOL_SIZE = 32;
 
@@ -95,30 +94,32 @@ public class VTestResultsAnalyzerPublisher extends Notifier implements MatrixAgg
 
 
   @Override
+  public MatrixAggregator createAggregator(
+      MatrixBuild build, Launcher launcher, BuildListener listener) {
+    return new MatrixAggregator(build, launcher, listener) {
+      /** Will be called the matrix root build ends. */
+      @Override
+      public boolean endBuild() throws InterruptedException, IOException {
+        return VTestResultsAnalyzerPublisher.this.perform(build, launcher, listener);
+      }
+    };
+  }
+
+  @Override
   public Descriptor getDescriptor() {
     return (Descriptor) super.getDescriptor();
   }
 
   private String getBuildCause(AbstractBuild<?, ?> build){
       String causedBy = "";
-      LOGGER.info("11111111111111");
       for (Cause cause : build.getCauses()) {
-
-            LOGGER.info(cause.getClass().toString());
             if (cause instanceof Cause.UserIdCause) {
-                LOGGER.info("2222222222");
                 causedBy = ((Cause.UserIdCause) cause).getShortDescription();
-                LOGGER.info(causedBy);
             }
             else if(cause instanceof Cause.UpstreamCause) {
-                LOGGER.info("3333333333");
-                
                 causedBy = ((Cause.UpstreamCause) cause).getShortDescription();
-                LOGGER.info(causedBy);
             }
-            LOGGER.info(cause.toString());
       }
-      LOGGER.info("44444 " + causedBy);
       return causedBy;
   }
   private void doSendJenkinsResults(
@@ -128,12 +129,7 @@ public class VTestResultsAnalyzerPublisher extends Notifier implements MatrixAgg
     try {
       conn = Util.getConnection(ip, password, VTestResultsAnalyzerMgmtLink.DB_NAME);
       Util.logToConsole(listener.getLogger(), "Sending jenkins build stats. Please wait.\n");
-
-
-      Util.logToConsole(listener.getLogger(), "start to get cause.\n");
-      LOGGER.info("cause.....");
       String causedBy = getBuildCause(build);
-
       String sqlInsert =
           String.format(
               "INSERT INTO "

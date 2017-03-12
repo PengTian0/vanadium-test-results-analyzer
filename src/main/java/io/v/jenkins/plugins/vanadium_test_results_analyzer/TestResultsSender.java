@@ -1,7 +1,7 @@
 package io.v.jenkins.plugins.vanadium_test_results_analyzer;
 
+import org.apache.commons.lang.StringUtils;
 import hudson.matrix.MatrixRun;
-import hudson.model.AbstractBuild;
 import hudson.tasks.junit.CaseResult;
 import hudson.tasks.test.TabulatedResult;
 import hudson.tasks.test.TestResult;
@@ -10,6 +10,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Collection;
+import hudson.model.Run;
 
 public class TestResultsSender implements Runnable {
 
@@ -21,7 +22,7 @@ public class TestResultsSender implements Runnable {
   private String password;
   private TestResult packageResult;
   private TabulatedResult classResult;
-  private AbstractBuild<?, ?> build;
+  private Run<?, ?> build;
   private String errMsg = "";
   private TestResultsSenderEventHandler eventHandler;
 
@@ -30,7 +31,7 @@ public class TestResultsSender implements Runnable {
       String password,
       TestResult packageResult,
       TabulatedResult classResult,
-      AbstractBuild<?, ?> build,
+      Run<?, ?> build,
       TestResultsSenderEventHandler eventHandler) {
     this.ip = ip;
     this.password = password;
@@ -77,7 +78,8 @@ public class TestResultsSender implements Runnable {
           result = "SKIPPED";
         }
         ps.clearParameters();
-        ps.setString(1, build.getRootBuild().getProject().getName()); // jenkins_project
+        String project_name = StringUtils.strip(build.getFullDisplayName().split("#")[0]);
+        ps.setString(1, project_name); // jenkins_project
         ps.setInt(2, build.getNumber()); // build_number
         if (build instanceof MatrixRun) {
           ps.setString(3, build.getParent().getName()); // sub build labels for sub builds.

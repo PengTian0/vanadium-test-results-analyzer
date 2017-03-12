@@ -1,3 +1,4 @@
+<?jelly escape-by-default='true'?>
 <div>
   Make it easy to see and analyze stats of Jenkins builds and test cases using (external) MySQL.
 </div>

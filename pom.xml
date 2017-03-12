@@ -21,61 +21,60 @@
   </licenses>
 
   <repositories>
-        <repository>
-            <id>repo.jenkins-ci.org</id>
-            <url>http://repo.jenkins-ci.org/public/</url>
-        </repository>
-    </repositories>
-    <pluginRepositories>
-        <pluginRepository>
-            <id>repo.jenkins-ci.org</id>
-            <url>http://repo.jenkins-ci.org/public/</url>
-        </pluginRepository>
-    </pluginRepositories>
+    <repository>
+      <id>repo.jenkins-ci.org</id>
+      <url>http://repo.jenkins-ci.org/public/</url>
+    </repository>
+  </repositories>
 
- <properties>
-		<jenkins.version>2.32</jenkins.version>
-		<java.level>8</java.level>
-		<maven-compiler-plugin.version>3.0</maven-compiler-plugin.version>
-	</properties>
+  <pluginRepositories>
+    <pluginRepository>
+      <id>repo.jenkins-ci.org</id>
+      <url>http://repo.jenkins-ci.org/public/</url>
+    </pluginRepository>
+  </pluginRepositories>
+
+  <properties>
+      <jenkins.version>2.32</jenkins.version>
+      <java.level>8</java.level>
+      <maven-compiler-plugin.version>3.0</maven-compiler-plugin.version>
+  </properties>
 
   <build>
     <plugins>
-	<plugin>
-	<artifactId>maven-compiler-plugin</artifactId>
-	<version>${maven-compiler-plugin.version}</version>
-	</plugin>
-
-        <plugin>
-    <groupId>org.apache.maven.plugins</groupId>
-    <artifactId>maven-enforcer-plugin</artifactId>
-    <executions>
-        <execution>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>${maven-compiler-plugin.version}</version>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <executions>
+          <execution>
             <id>enforce-banned-dependencies</id>
             <goals>
-                <goal>enforce</goal>
+              <goal>enforce</goal>
             </goals>
             <configuration>
-                <rules>
-                    <bannedDependencies>
-                        <includes>
-                            <include>mysql-connector-java</include>
-                        </includes>
-                    </bannedDependencies>
-                </rules>
-
+              <rules>
+                <bannedDependencies>
+                  <includes>
+                    <include>mysql-connector-java</include>
+                   </includes>
+                </bannedDependencies>
+              </rules>
             </configuration>
-        </execution>
-    </executions>
-</plugin>
-     </plugins>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
   </build>
 
   <dependencies>
     <dependency>
       <groupId>org.jenkins-ci.plugins</groupId>
       <artifactId>junit</artifactId>
-      <version>1.9</version>
+      <version>1.20</version>
     </dependency>
     <dependency>
       <groupId>mysql</groupId>
@@ -96,24 +95,26 @@
       <groupId>org.jenkins-ci.plugins</groupId>
       <artifactId>matrix-project</artifactId>
       <version>1.4</version>
-   </dependency>
-   
-		<!-- dependencies on Jenkins Pipeline plugins -->
-		<dependency>
-			<groupId>org.jenkins-ci.plugins.workflow</groupId>
-			<artifactId>workflow-job</artifactId>
-			<version>1.14</version>
-		</dependency>
-		<dependency>
-			<groupId>org.jenkins-ci.plugins.workflow</groupId>
-			<artifactId>workflow-cps</artifactId>
-			<version>1.14</version>
-		</dependency>
-		<dependency>
-			<groupId>org.jenkins-ci.plugins.workflow</groupId>
-			<artifactId>workflow-step-api</artifactId>
-			<version>1.14</version>
-		</dependency>
+    </dependency>
+    <dependency>
+      <groupId>org.jenkins-ci.plugins</groupId>
+      <artifactId>structs</artifactId>
+      <version>1.3</version>
+    </dependency>  
+    <dependency>
+      <groupId>org.jenkins-ci.plugins.workflow</groupId>
+      <artifactId>workflow-job</artifactId>
+      <version>2.5</version>
+    </dependency>
+    <dependency>
+      <groupId>org.jenkins-ci.plugins.workflow</groupId>
+      <artifactId>workflow-cps</artifactId>
+      <version>2.5</version>
+    </dependency>
+    <dependency>
+      <groupId>org.jenkins-ci.plugins.workflow</groupId>
+      <artifactId>workflow-step-api</artifactId>
+      <version>2.5</version>
+    </dependency>
   </dependencies>
-
 </project>
