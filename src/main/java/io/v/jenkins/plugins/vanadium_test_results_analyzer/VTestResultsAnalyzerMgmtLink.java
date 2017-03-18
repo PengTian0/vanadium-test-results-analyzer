@@ -87,6 +87,8 @@ public class VTestResultsAnalyzerMgmtLink extends ManagementLink {
           // When this entry is added to the database.
           + " update_time DATETIME, "
           + " causedBy VARCHAR(1024), "
+          + " comments VARCHAR(1024), "
+          + " description VARCHAR(1024), "
           + " PRIMARY KEY ( id ))";
 
   static final String TB_TEST_RESULTS = "test_results";
@@ -119,6 +121,7 @@ public class VTestResultsAnalyzerMgmtLink extends ManagementLink {
           + " url VARCHAR(1024), "
           // When this entry is added to the database.
           + " update_time DATETIME, "
+          + " comments VARCHAR(1024), "
           + " PRIMARY KEY ( id ))";
 
   /** SQL to query table stats. */
@@ -543,6 +546,7 @@ public class VTestResultsAnalyzerMgmtLink extends ManagementLink {
       String testFullName,
       String buildName,
       String subBuildLabels) {
+
     JSONObject ret = new JSONObject();
     ret.put("errMsg", "");
     JSONArray testCases = new JSONArray();

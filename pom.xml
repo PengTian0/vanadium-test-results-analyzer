@@ -10,7 +10,7 @@
   <name>Vanadium Test Results Analyzer</name>
   <groupId>io.v.jenkins.plugins</groupId>
   <artifactId>vanadium-test-results-analyzer</artifactId>
-  <version>0.1</version>
+  <version>0.2</version>
   <packaging>hpi</packaging>
 
   <licenses>
@@ -45,6 +45,10 @@
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
         <version>${maven-compiler-plugin.version}</version>
+        <configuration>
+          <source>1.7</source>
+          <target>1.7</target>
+        </configuration>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -104,17 +108,17 @@
     <dependency>
       <groupId>org.jenkins-ci.plugins.workflow</groupId>
       <artifactId>workflow-job</artifactId>
-      <version>2.5</version>
+      <version>2.2</version>
     </dependency>
     <dependency>
       <groupId>org.jenkins-ci.plugins.workflow</groupId>
       <artifactId>workflow-cps</artifactId>
-      <version>2.5</version>
+      <version>2.2</version>
     </dependency>
     <dependency>
       <groupId>org.jenkins-ci.plugins.workflow</groupId>
       <artifactId>workflow-step-api</artifactId>
-      <version>2.5</version>
+      <version>2.2</version>
     </dependency>
   </dependencies>
 </project>
